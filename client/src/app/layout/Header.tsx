@@ -10,8 +10,9 @@ const midlinks = [
 
 const rightlinks = [
     {title: 'login', path: '/login'},
-    {title: 'register', path: '/register'}
+    {title: 'register', path: '/register'},
 ]
+const shoppingCartLink = { title: 'shopping-cart', path: '/shopping-cart' };
 
 interface Props{
     darkmode: boolean;
@@ -56,7 +57,7 @@ export default function Header({darkmode,handleThemeChange}: Props) {
             </List>
             
             <Box display= 'flex' alignItems= 'center'>
-                <IconButton size="large" edge="start" color="inherit" sx={{mr:2}}>
+                <IconButton size="large" edge="start" color="inherit" sx={{mr:2}} component={NavLink} to={shoppingCartLink.path}>
                     <Badge badgeContent="4" color="secondary">
                         <ShoppingCart />
                     </Badge>

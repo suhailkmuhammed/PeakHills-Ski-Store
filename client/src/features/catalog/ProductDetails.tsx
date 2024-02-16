@@ -1,8 +1,10 @@
-import { Divider, Grid, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
-import axios from "axios";
+import { Button, Divider, Grid, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Product } from "../../app/models/product";
+import agent from "../../app/api/agent";
+import NotFound from "../../app/errors/NotFound";
+import LoadingComponent from "../../app/layout/LoadingComponent";
 
 export default function ProductDetails() {
     
@@ -11,14 +13,14 @@ export default function ProductDetails() {
     const [loading,SetLoading] = useState(true)
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/api/products/${id}`)
-        .then(response => setProduct(response.data))
+        id && agent.Catalog.details(parseInt(id))
+        .then(response => setProduct(response))
         .catch(error => console.log(error))
         .finally(() => SetLoading(false))
     },[id])
 
-    if(loading) return <h3>Loading...</h3>
-    if(!product) return <h3>Product not found...</h3>
+    if(loading) return <LoadingComponent message="Loading product..."/>
+    if(!product) return <NotFound />
     
     return(
         <Grid container spacing={6}>
@@ -55,6 +57,14 @@ export default function ProductDetails() {
                         </TableBody>
                     </Table>
                 </TableContainer>
+                <Grid container spacing={2}>
+                    <Grid item>
+                        <Button size="large" color="secondary" variant='contained'>ADD TO CART</Button>
+                    </Grid>
+                    <Grid item>
+                    <Button size="large" color="secondary" variant='contained'>BUY NOW</Button>
+                    </Grid>
+                </Grid>                
             </Grid>
         </Grid>
     )
