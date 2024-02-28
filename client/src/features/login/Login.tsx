@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Paper, Typography, TextField, Button, Link, Box, Avatar } from '@mui/material';
+import { Container, Paper, Typography, TextField, Button, Link, Box, Avatar, createTheme, ThemeProvider } from '@mui/material';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -18,7 +18,21 @@ const LoginPage = () => {
     console.log('Email:', email, 'Password:', password);
   };
 
+
+const [darkMode,setDarkMode] = useState(false);
+    const paletteType = darkMode ? 'dark' : 'light'; 
+    const theme = createTheme({
+        palette: {
+            mode: paletteType,
+            background: {
+              default:  paletteType === 'light' ? '#eaeaea' : '#121212'
+            }
+        }
+    })
+
+
   return (
+    <ThemeProvider theme={theme}>
     <Container  maxWidth="xs" sx={{ width:'100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <Paper elevation={3} sx={{ padding: 4, backgroundColor: '#f5f5f5', borderRadius: 2 }}>
       <Box display="flex" justifyContent="center" mb={2}>
@@ -65,6 +79,7 @@ const LoginPage = () => {
         </form>
       </Paper>
     </Container>
+    </ThemeProvider>
   );
 };
 
