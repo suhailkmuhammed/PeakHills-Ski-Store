@@ -1,15 +1,15 @@
 import { TableContainer, Paper, Table, TableBody, TableRow, TableCell } from "@mui/material";
-import { useStoreContext } from "../../app/context/StoreContext";
 import { currencyformat } from "../../app/util/Util";
 import { useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
+import { useAppSelector } from "../../app/store/configureStore";
 
 export default function BasketSummary() {
     
     const [subtotal, setSubtotal] = useState(0);
     const [deliveryfee,setDeliveryfee] = useState(0);
     const [loading,setLoading] = useState(false);
-    const { basket } = useStoreContext();
+    const { basket } = useAppSelector(state => state.basket);
     
     useEffect(() => {
         // This effect will trigger whenever basket changes

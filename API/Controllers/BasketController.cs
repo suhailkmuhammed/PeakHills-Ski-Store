@@ -31,7 +31,7 @@ public class BasketController : BaseApiController
         var basket = await RetrieveBasket();
         if (basket == null) basket = CreateBasket();
         //get product
-        if(product == null) return NotFound();
+        if(product == null) return BadRequest(new ProblemDetails{Title = "Product Not Found"});
         //add item
         basket.AddItem(product,quantity);
         //save changes

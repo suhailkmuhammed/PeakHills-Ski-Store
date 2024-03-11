@@ -2,24 +2,16 @@ import { Avatar, Button, Card, CardActions, CardContent, CardHeader, CardMedia, 
 import { Product } from "../../app/models/product";
 import { Link } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
-import { useState } from "react";
-import agent from "../../app/api/agent";
-import { useStoreContext } from "../../app/context/StoreContext";
 import { currencyformat } from "../../app/util/Util";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { addBasketItemAsync } from "../basket/basketSlice";
 
 interface Props {
     product: Product;
 }
 export default function ProductCard({ product }: Props) {
-    const [loading,setLoading] = useState(false);
-    const {setBasket} = useStoreContext();
-    function handleAddItem(productId:number){
-        setLoading(true);
-        agent.Basket.addItem(productId)
-        .then(basket => setBasket(basket))
-        .catch(error => console.log(error))
-        .finally(() => setLoading(false));
-    }
+    const {status} = useAppSelector(state => state.basket)
+    const dispatch = useAppDispatch();
     
     return (
         <Card>
@@ -38,6 +30,8 @@ export default function ProductCard({ product }: Props) {
                 sx={{ height: 140, backgroundSize: 'contain', bgcolor: 'primary.light' }}
                 image={product.pictureUrl}
                 title={product.name}
+                component={Link}
+                to={`/catalog/${product.id}`}
             />
             <CardContent>
                 <Typography gutterBottom color='secondary' variant="h5">
@@ -49,8 +43,8 @@ export default function ProductCard({ product }: Props) {
             </CardContent>
             <CardActions>
                 <LoadingButton 
-                loading={loading}
-                onClick={() => handleAddItem(product.id)}
+                loading={status.includes('pendingAddItem' + product.id)}
+                onClick={() => dispatch(addBasketItemAsync({productId: product.id}))}
                 size="small"
                 >Add to cart</LoadingButton>
                 <Button component={Link} to= {`/catalog/${product.id}`} size="small">View</Button>

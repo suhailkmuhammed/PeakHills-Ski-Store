@@ -1,7 +1,7 @@
 import { ShoppingCart } from "@mui/icons-material";
 import { AppBar, Typography,Toolbar, Switch, List, ListItem, IconButton, Badge, Box } from "@mui/material";
 import { NavLink } from "react-router-dom";
-import { useStoreContext } from "../context/StoreContext";
+import { useAppSelector } from "../store/configureStore";
 
 const midlinks = [
     {title: 'catalog', path: '/catalog'},
@@ -32,7 +32,7 @@ const navStyles = {
     }
 }
 export default function Header({darkmode,handleThemeChange}: Props) {
-    const {basket} = useStoreContext();
+    const {basket} = useAppSelector(state => state.basket)
     const itemCount = basket?.items.reduce((sum,item) => sum + item.quantity,0)
     return (
         <AppBar position='static' sx={{mb: 4}}>
