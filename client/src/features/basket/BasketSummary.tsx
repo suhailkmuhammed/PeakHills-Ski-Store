@@ -8,16 +8,11 @@ export default function BasketSummary() {
     
     const [subtotal, setSubtotal] = useState(0);
     const [deliveryfee,setDeliveryfee] = useState(0);
-    const [loading,setLoading] = useState(false);
     const { basket } = useAppSelector(state => state.basket);
     
     useEffect(() => {
         // This effect will trigger whenever basket changes
-        setLoading(true);
         handleSubTotal();
-        setTimeout(() => {
-            setLoading(false);
-        }, 500);
         
     }, [basket]);
 
@@ -41,25 +36,25 @@ export default function BasketSummary() {
                         <TableRow>
                             <TableCell colSpan={2}>Subtotal</TableCell>
                             <TableCell align="right">
-                                <LoadingButton loading={loading}>
+                            <LoadingButton>
                                 {currencyformat(subtotal)}
-                                </LoadingButton>
+                            </LoadingButton>
                             </TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell colSpan={2}>Delivery fee*</TableCell>
                             <TableCell align="right">
-                            <LoadingButton loading={loading}>
+                            <LoadingButton>
                                 {currencyformat(deliveryfee)}
-                                </LoadingButton>
+                            </LoadingButton>
                             </TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell colSpan={2}><b>Total</b></TableCell>
                             <TableCell align="right">
-                            <LoadingButton loading={loading}>
+                            <LoadingButton>
                                 {currencyformat(subtotal + deliveryfee)}
-                                </LoadingButton>
+                            </LoadingButton>
                             </TableCell>
                         </TableRow>
                         <TableRow>

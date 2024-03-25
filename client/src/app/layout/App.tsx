@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import { useStoreContext } from "../context/StoreContext";
 import agent from "../api/agent";
 import LoadingComponent from "./LoadingComponent";
 import { getCookie } from "../util/Util";

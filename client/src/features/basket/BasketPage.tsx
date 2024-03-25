@@ -13,7 +13,6 @@ export default function BasketPage() {
 
     const navigate = useNavigate();
     function handleProductImageClick(productid: number) {
-
         navigate(`/catalog/${productid}`);
     }
 
@@ -50,7 +49,6 @@ export default function BasketPage() {
                                     <LoadingButton
                                         loading={status === 'pendingRemoveItem' + item.productId + 'rem'}
                                         onClick={() => dispatch(removeBasketItemAsync({productId: item.productId,quantity: 1, name: 'rem'}))}
-                                        onChange={BasketSummary}
                                         color="error">
                                         <Remove />
                                     </LoadingButton>
@@ -58,7 +56,6 @@ export default function BasketPage() {
                                     <LoadingButton
                                         loading={status === 'pendingAddItem' + item.productId}
                                         onClick={() => dispatch(addBasketItemAsync({productId: item.productId, quantity: 1}))}
-                                        onChange={BasketSummary}
                                         color="secondary">
                                         <Add />
                                     </LoadingButton>
@@ -67,8 +64,7 @@ export default function BasketPage() {
                                 <TableCell align="right">
                                     <LoadingButton
                                         loading={status === 'pendingRemoveItem' + item.productId + 'del'} color="error"
-                                        onClick={() => dispatch(removeBasketItemAsync({productId: item.productId, quantity: item.quantity, name: 'del'}))}
-                                        onChange={BasketSummary}>
+                                        onClick={() => dispatch(removeBasketItemAsync({productId: item.productId, quantity: item.quantity, name: 'del'}))}>
                                         <Delete />
                                     </LoadingButton>
                                 </TableCell>
