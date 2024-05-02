@@ -10,35 +10,36 @@ import { fetchProductAsync, productSelectors } from "./catalogSlice";
 
 export default function ProductDetails() {
 
-    const { basket,status } = useAppSelector(state => state.basket);
+    const { basket, status } = useAppSelector(state => state.basket);
     const dispatch = useAppDispatch();
     const { id } = useParams<{ id: string }>();
-    const productId = id ? parseInt(id, 10): undefined; 
+    const productId = id ? parseInt(id, 10) : undefined;
     const product = useAppSelector(state => productSelectors.selectById(state, productId!));
-    const {status: productStatus} = useAppSelector(state => state.catalog)
+    const { status: productStatus } = useAppSelector(state => state.catalog)
     const [quantity, setQuantity] = useState(0)
     const item = basket?.items.find(i => i.productId === product?.id)
+    const isLoggedIn = localStorage.getItem('user');
 
     useEffect(() => {
         if (item) setQuantity(item.quantity);
-        if(!product) dispatch(fetchProductAsync(parseInt(id!)))
-    }, [id,item,product,dispatch])
+        if (!product) dispatch(fetchProductAsync(parseInt(id!)))
+    }, [id, item, product, dispatch])
 
     function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
-        if(parseInt(event.currentTarget.value) >= 0){
+        if (parseInt(event.currentTarget.value) >= 0) {
             setQuantity(parseInt(event.currentTarget.value));
         }
     }
 
     function handleUpdateCart() {
-        if(!product) return;
-        if(!item || quantity > item.quantity) {
-            const updatedQuantity = item? quantity - item.quantity : quantity;
-            dispatch(addBasketItemAsync({productId: product?.id!, quantity: updatedQuantity}));
+        if (!product) return;
+        if (!item || quantity > item.quantity) {
+            const updatedQuantity = item ? quantity - item.quantity : quantity;
+            dispatch(addBasketItemAsync({ productId: product?.id!, quantity: updatedQuantity }));
         }
         else {
             const updatedQuantity = item.quantity - quantity;
-            dispatch(removeBasketItemAsync({productId: product?.id!, quantity: updatedQuantity}));
+            dispatch(removeBasketItemAsync({ productId: product?.id!, quantity: updatedQuantity }));
         }
     }
     if (productStatus.includes('pending')) return <LoadingComponent message="Loading product..." />
@@ -80,30 +81,33 @@ export default function ProductDetails() {
                     </Table>
                 </TableContainer>
                 <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                        <TextField
-                            onChange={handleInputChange}
-                            variant='outlined'
-                            type='number'
-                            label='Quantity in Cart'
-                            fullWidth
-                            value={quantity}
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <LoadingButton
-                            disabled={item?.quantity === quantity || !item && quantity === 0}
-                            loading={status.includes('pending')}
-                            onClick={handleUpdateCart}
-                            sx={{height: '55px'}}
-                            color='primary'
-                            size='large'
-                            variant='contained'
-                            fullWidth
-                        >
-                            {item ? 'Update Quantity' : 'Add to Cart'}
-                        </LoadingButton>
-                    </Grid>
+                    {isLoggedIn && (
+                        <>
+                        <Grid item xs={6}>
+                            <TextField
+                                onChange={handleInputChange}
+                                variant='outlined'
+                                type='number'
+                                label='Quantity in Cart'
+                                fullWidth
+                                value={quantity} />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <LoadingButton
+                                disabled={item?.quantity === quantity || !item && quantity === 0}
+                                loading={status.includes('pending')}
+                                onClick={handleUpdateCart}
+                                sx={{ height: '55px' }}
+                                color='primary'
+                                size='large'
+                                variant='contained'
+                                fullWidth
+                            >
+                                {item ? 'Update Quantity' : 'Add to Cart'}
+                            </LoadingButton>
+                        </Grid>
+                        </>
+                    )}
                 </Grid>
             </Grid>
         </Grid>
