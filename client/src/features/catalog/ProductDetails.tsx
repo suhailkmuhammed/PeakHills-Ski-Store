@@ -7,22 +7,39 @@ import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { addBasketItemAsync, removeBasketItemAsync } from "../basket/basketSlice";
 import { fetchProductAsync, productSelectors } from "./catalogSlice";
+import SimilarProducts from "./SimilarProducts";
+import RecentlyViewedProducts from "./RecentProducts";
+import { addRecentlyViewedProduct, recentProductSelectors } from "./RecentlyViewedSlice";
 
 export default function ProductDetails() {
 
     const { basket, status } = useAppSelector(state => state.basket);
+
     const dispatch = useAppDispatch();
+
     const { id } = useParams<{ id: string }>();
     const productId = id ? parseInt(id, 10) : undefined;
     const product = useAppSelector(state => productSelectors.selectById(state, productId!));
-    const { status: productStatus } = useAppSelector(state => state.catalog)
-    const [quantity, setQuantity] = useState(0)
-    const item = basket?.items.find(i => i.productId === product?.id)
-    const isLoggedIn = localStorage.getItem('user');
+    const { status: productStatus } = useAppSelector(state => state.catalog);
+
+    const [quantity, setQuantity] = useState(0);
+
+    const item = basket?.items.find(i => i.productId === product?.id);
+
+    const recentProducts = useAppSelector(recentProductSelectors.selectAll);
 
     useEffect(() => {
         if (item) setQuantity(item.quantity);
-        if (!product) dispatch(fetchProductAsync(parseInt(id!)))
+        if (!product) {
+            dispatch(fetchProductAsync(parseInt(id!)));
+        }
+
+        return () => {
+            if (product) {
+                dispatch(addRecentlyViewedProduct(product));
+            }
+        };
+
     }, [id, item, product, dispatch])
 
     function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
@@ -80,9 +97,8 @@ export default function ProductDetails() {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <Grid container spacing={2}>
-                    {isLoggedIn && (
-                        <>
+                <Grid container spacing={2} width={'75%'}>
+                    <>
                         <Grid item xs={6}>
                             <TextField
                                 onChange={handleInputChange}
@@ -106,10 +122,17 @@ export default function ProductDetails() {
                                 {item ? 'Update Quantity' : 'Add to Cart'}
                             </LoadingButton>
                         </Grid>
-                        </>
-                    )}
+                    </>
                 </Grid>
             </Grid>
+            <Grid item xs={12}>
+                <SimilarProducts />
+            </Grid>
+            {recentProducts.length > 0 && (
+                <Grid item xs={12}>
+                    <RecentlyViewedProducts />
+                </Grid>
+            )}
         </Grid>
     )
 }

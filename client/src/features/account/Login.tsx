@@ -4,6 +4,7 @@ import { LoadingButton } from '@mui/lab';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../app/store/configureStore';
 import { signInUser } from './accountSlice';
+import { clearRecentlyViewedProducts } from '../catalog/RecentlyViewedSlice';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -18,7 +19,9 @@ const LoginPage = () => {
       if (user.meta.requestStatus === "fulfilled")
         navigate(location.state?.from || '/catalog');
       else
-        navigate('/')
+        navigate('/');
+
+      dispatch(clearRecentlyViewedProducts());
     } catch(error){
       console.log(error);
     }

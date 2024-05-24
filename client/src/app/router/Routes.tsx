@@ -13,6 +13,8 @@ import Basketempty from "../../features/account/Basketempty";
 import CheckoutPage from "../../features/checkout/CheckoutPage";
 import Register from "../../features/account/Register";
 import RequireAuth from "./RequireAuth";
+import Orders from "../../features/orders/orders";
+import OrdersEmpty from "../../features/orders/ordersEmpty";
 
 export const router = createBrowserRouter([
 {
@@ -21,6 +23,7 @@ export const router = createBrowserRouter([
     children: [
         {element: <RequireAuth />,children: [
             {path: 'checkout', element: <CheckoutPage />},
+            {path: 'orders', element: <Orders />},
         ]},
         {path: '', element: <HomePage />},
         {path: 'about', element: <AboutPage />},
@@ -33,6 +36,7 @@ export const router = createBrowserRouter([
         {path: 'not-found', element: <NotFound />},
         {path: 'basket', element: <BasketPage />},
         {path: 'basket-empty', element: <Basketempty />},
+        {path: 'orders-empty', element: <OrdersEmpty />},
         {path: '*', element: <Navigate replace to='/not-found' />},
     ]
 }

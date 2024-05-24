@@ -3,13 +3,13 @@ import React from "react";
 import { useAppDispatch, useAppSelector } from "../store/configureStore";
 import { signOut } from "../../features/account/accountSlice";
 import { clearBasket } from "../../features/basket/basketSlice";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { clearRecentlyViewedProducts } from "../../features/catalog/RecentlyViewedSlice";
 
 export default function SignedInMenu() {
-  const navigate = useNavigate();
-    const dispatch = useAppDispatch();
-    const {user} = useAppSelector(state => state.account);
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector(state => state.account);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -18,12 +18,16 @@ export default function SignedInMenu() {
     setAnchorEl(null);
   };
 
+  const handleMenuItemClick = () => {
+    handleClose();
+  };
+
   return (
     <>
-      <Button 
-      color="inherit"
-      onClick={handleClick}
-      sx={{typography: 'h7'}}
+      <Button
+        color="inherit"
+        onClick={handleClick}
+        sx={{ typography: 'h7' }}
       >
         {user?.email}
       </Button>
@@ -33,13 +37,16 @@ export default function SignedInMenu() {
         onClose={handleClose}
         TransitionComponent={Fade}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={() => navigate('/checkout')}>My Orders</MenuItem>
+        <MenuItem onClick={() => {
+          handleClose
+        }}>Profile</MenuItem>
+        <MenuItem component={Link} to='/orders' onClick={handleMenuItemClick}>My Orders</MenuItem>
         <MenuItem onClick={() => {
           dispatch(signOut());
           dispatch(clearBasket());
-          }}>
-            Logout</MenuItem>
+          dispatch(clearRecentlyViewedProducts());
+        }}>
+          Logout</MenuItem>
       </Menu>
     </>
   );

@@ -50,6 +50,7 @@ export default function ProductCard({ product }: Props) {
                 </LoadingButton>
                 <Button component={Link} to= {`/catalog/${product.id}`} size="small">View</Button>
             </CardActions>
+
         </Card>
     )
 }

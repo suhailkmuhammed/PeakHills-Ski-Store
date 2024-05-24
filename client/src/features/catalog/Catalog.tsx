@@ -28,6 +28,11 @@ export default function Catalog() {
         if (!filtersLoaded) dispatch(fetchFilters());
     }, [dispatch, filtersLoaded])
 
+    useEffect(() => {
+        // Fetch products when the length of the product list changes
+        dispatch(fetchProductsAsync());
+    }, [products.length, dispatch]);
+
     if (!filtersLoaded) return <LoadingComponent message="Loading products..." />
     return (
         <Grid container columnSpacing={4}>
