@@ -19,11 +19,9 @@ export default function SimilarProducts() {
 
     useEffect(() => {
         if (prodId && products.length === 0) {
-            console.log("Fetching products for prodId:", prodId);
             dispatch(fetchAllProductsAsync(prodId));
         }
         return () => {
-            console.log("Resetting products");
             dispatch(resetProducts());
         };
     }, [dispatch, prodId, products.length]);

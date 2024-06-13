@@ -5,7 +5,7 @@ import { PaginatedResponse } from "../models/pagination";
 import { store } from "../store/configureStore";
 
 const sleep = () => new Promise(resolve => setTimeout(resolve,500))
-axios.defaults.baseURL= 'http://localhost:5000/api/';
+axios.defaults.baseURL= import.meta.env.VITE_API_URL;
 axios.defaults.withCredentials=true;
 
 const responsebody = (response: AxiosResponse) => response.data;
@@ -17,7 +17,7 @@ axios.interceptors.request.use(config => {
 })
 
 axios.interceptors.response.use(async response => {
-    await sleep();
+    if(import.meta.env.DEV) await sleep();
     const pagination = response.headers['pagination'];
     if(pagination){
         response.data = new PaginatedResponse(response.data, JSON.parse(pagination));
@@ -81,6 +81,7 @@ const Catalog = {
     list: (params: URLSearchParams) => requests.get('products',params),
     details: (id:number) => requests.get(`products/${id}`),
     fetchFilters: () => requests.get('products/filters'),
+    featuredproducts: () => requests.get('products/featuredProducts'),
     allproducts: (id: number) => requests.get(`products/type/${id}`)
 }
 

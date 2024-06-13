@@ -55,6 +55,28 @@ namespace API.Controllers
             return products;
         }
 
+        [HttpGet("featuredProducts")]
+        public async Task<ActionResult<IEnumerable<Product>>> GetFeaturedProducts()
+        {
+            List<int> ids = new List<int>
+            {
+                8,4,14,12
+            };
+            var products = new List<Product>();
+            foreach (int id in ids)
+            {
+                var product = await _context.Products
+                                         .Where(p => p.Id == id)
+                                         .FirstOrDefaultAsync();
+                if (product != null)
+                {
+                    products.Add(product);
+                }
+            }
+            if (products.Count == 0) return NotFound();
+            return products;
+        }
+
         [HttpGet("filters")]
         public async Task<IActionResult> GetFilters()
         {

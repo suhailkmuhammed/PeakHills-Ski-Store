@@ -2,19 +2,19 @@ import { ThemeProvider } from "@emotion/react";
 import Header from "./Header";
 import { Container, CssBaseline, createTheme } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import agent from "../api/agent";
 import LoadingComponent from "./LoadingComponent";
-import { getCookie } from "../util/Util";
 import { useAppDispatch } from "../store/configureStore";
-import { fetchBasketAsync, setBasket } from "../../features/basket/basketSlice";
+import { fetchBasketAsync } from "../../features/basket/basketSlice";
 import { fetchCurrentUser } from "../../features/account/accountSlice";
+import HomePage from "../../features/home/HomePage";
 
 function App() {
 
     const dispatch = useAppDispatch();
+    const location = useLocation();
     const [loading, setLoading] = useState(true);
 
     const initApp = useCallback(async () => {
@@ -25,7 +25,7 @@ function App() {
             console.log(error);
         }
     }, [dispatch])
-    
+
     useEffect(() => {
         initApp().then(() => setLoading(false));
     }, [initApp])
@@ -44,9 +44,6 @@ function App() {
     function handleThemeChange() {
         setDarkMode(!darkMode);
     }
-    if (loading) {
-        return <LoadingComponent message="Initialising app..." />;
-    }
 
     // Render the rest of your component here
     return (
@@ -54,9 +51,12 @@ function App() {
             <ToastContainer position="top-right" hideProgressBar theme="colored" />
             <CssBaseline />
             <Header darkmode={darkMode} handleThemeChange={handleThemeChange} />
-            <Container>
-                <Outlet />
-            </Container>
+            {loading ? <LoadingComponent message="Initialising app..." />
+                : location.pathname === '/' ? <HomePage />
+                    : <Container sx={{mt: 4}}>
+                        <Outlet />
+                    </Container>
+            }
         </ThemeProvider>
     )
 }

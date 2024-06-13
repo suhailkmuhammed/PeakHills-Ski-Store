@@ -27,6 +27,8 @@ export default function ProductDetails() {
     const item = basket?.items.find(i => i.productId === product?.id);
 
     const recentProducts = useAppSelector(recentProductSelectors.selectAll);
+    console.log(localStorage.length);
+    
 
     useEffect(() => {
         if (item) setQuantity(item.quantity);
@@ -35,7 +37,7 @@ export default function ProductDetails() {
         }
 
         return () => {
-            if (product) {
+            if (product && localStorage.length !=0) {
                 dispatch(addRecentlyViewedProduct(product));
             }
         };

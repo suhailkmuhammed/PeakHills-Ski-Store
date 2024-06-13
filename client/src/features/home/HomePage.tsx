@@ -1,11 +1,25 @@
 import { Grid, Typography, Button } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
+import agent from '../../app/api/agent';
+import { useEffect, useState } from 'react';
+import { Product } from '../../app/models/product';
 
 const HomePage = () => {
+    const [products, setProducts] = useState<Product[]>([]);
     const navigate = useNavigate();
     function handleProductImageClick(productid: number) {
         navigate(`/catalog/${productid}`);
     }
+
+    useEffect(() => {
+        const fetchFeaturedProducts = async () => {
+            const response = await agent.Catalog.featuredproducts();
+            setProducts(response);
+        };
+
+        fetchFeaturedProducts();
+    }, []);
+
     return (
         <div>
             {/* Hero Section */}
@@ -40,8 +54,7 @@ const HomePage = () => {
                     Shop Now
                 </Button>
             </div>
-
-            {/* Featured Products Section */}
+             {/* Featured Products Section */}
             <section style={{
                 padding: '40px 0',
                 background: '#f9f9f9',
@@ -52,72 +65,27 @@ const HomePage = () => {
                 </Typography>
                 <Grid container spacing={1}>
                     {/* Product items go here */}
-                    <Grid item xs={12} sm={6} md={3}>
-                        <div style={{
-                            textAlign: 'center',
-                            padding: '20px',
-                        }}>
-                            {/* Product image */}
-                            <img src="http://localhost:3000/images/products/hat-react1.png" alt="Ski Product 1" style={{ width: '60%' }} />
-                            <Typography variant="h6" gutterBottom>
-                                Ski Hat
-                            </Typography>
-                            <Button
-                                variant="outlined"
-                                onClick={() => handleProductImageClick(8)}
-                            >View Details</Button>
-                        </div>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                        <div style={{
-                            textAlign: 'center',
-                            padding: '20px',
-                        }}>
-                            {/* Product image */}
-                            <img src="http://localhost:3000/images/products/sb-core2.png" alt="Ski Product 1" style={{ width: '60%' }} />
-                            <Typography variant="h6" gutterBottom>
-                                Ski Board
-                            </Typography>
-                            <Button
-                                variant="outlined"
-                                onClick={() => handleProductImageClick(4)}>
-                                View Details</Button>
-                        </div>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                        <div style={{
-                            textAlign: 'center',
-                            padding: '20px',
-                        }}>
-                            {/* Product image */}
-                            <img src="http://localhost:3000/images/products/boot-redis1.png" alt="Ski Product 2" style={{ width: '60%' }} />
-                            <Typography variant="h6" gutterBottom>
-                                Ski Boot
-                            </Typography>
-                            <Button
-                                variant="outlined"
-                                onClick={() => handleProductImageClick(14)}>
-                                View Details</Button>
-                        </div>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                        <div style={{
-                            textAlign: 'center',
-                            padding: '20px',
-                        }}>
-                            {/* Product image */}
-                            <img src="http://localhost:3000/images/products/glove-react1.png" alt="Ski Product 3" style={{ width: '60%' }} />
-                            <Typography variant="h6" gutterBottom>
-                                Ski Gloves
-                            </Typography>
-                            <Button
-                                variant="outlined"
-                                onClick={() => handleProductImageClick(12)}>
-                                View Details</Button>
-                        </div>
-                    </Grid>
+                    {products.map((product) => (
+                        <Grid item xs={12} sm={6} md={3} key={product.id}>
+                            <div style={{
+                                textAlign: 'center',
+                                padding: '20px',
+                            }}>
+                                {/* Product image */}
+                                <img src={product.pictureUrl} alt="Ski Product 1" style={{ width: '60%' }} />
+                                <Typography variant="h6" gutterBottom>
+                                    {product.name}
+                                </Typography>
+                                <Button
+                                    variant="outlined"
+                                    onClick={() => handleProductImageClick(product.id)}
+                                >View Details</Button>
+                            </div>
+                        </Grid>
+                    ))}
                 </Grid>
             </section>
+
 
             {/* About Section */}
             <section style={{
@@ -144,7 +112,7 @@ const HomePage = () => {
                     © 2024 Ski Shop. All rights reserved.
                 </Typography>
             </footer>
-        </div>
+        </div >
     );
 };
 
